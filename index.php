@@ -131,7 +131,24 @@ if (isset($_POST['etl'])) {
 	}
 	echo '<br/>'.'Extract end !';
 
-
+	/*transform*/
+	$_SESSION['product']['id'] = $_POST['productId'];
+	$_SESSION['product']['manufacturer'] = ltrim($_SESSION['product']['manufacturer']);
+	$_SESSION['product']['description'] = ltrim($_SESSION['product']['description']);
+	for ($j=0;$j<count($_SESSION['bdreview']);$j++) {
+		$_SESSION['bdreview'][$j]['author'] = ltrim($_SESSION['bdreview'][$j]['author']);
+		$_SESSION['bdreview'][$j]['recommendation'] = ltrim($_SESSION['bdreview'][$j]['recommendation']);
+		$_SESSION['bdreview'][$j]['text'] = htmlspecialchars($_SESSION['bdreview'][$j]['text']);
+		$reit = explode('/',$_SESSION['bdreview'][$j]['stars']);
+		$_SESSION['bdreview'][$j]['stars'] = $reit[0];
+	}
+	echo '<br/>'.'Transform end !';
+	$file_name = $_SESSION['product']['id'];
+	$replace = array(" ", "-", "/");
+	$final_name = str_replace($replace, "", $file_name);
+	$files = 'files/'.$final_name;
+	// echo $_SESSION['product']['id'];
+	file_put_contents($files,$_SESSION['product']);
 
 	/*load*/
 	$db = new Db();
